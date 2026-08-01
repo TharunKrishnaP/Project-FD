@@ -2,26 +2,28 @@
 <html>
 <head>
   <title>Your Friendship Wish</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ensures mobile scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: 'Dancing Script', cursive;
       text-align: center;
       margin: 0;
       overflow-x: hidden;
-      background-attachment: fixed; /* keeps gradient stable */
+      background-attachment: fixed;
     }
     .wish-container {
-      margin: 8% auto;
-      max-width: 90%; /* flexible width for mobile */
-      padding: 40px 20px;
-      border-radius: 20px;
+      margin: 5% auto;
+      width: 95%;
+      max-width: 600px;
+      padding: 20px;
+      border-radius: 16px;
       position: relative;
       z-index: 2;
       color: #333;
-      background: #fff url('silhouette.png') no-repeat center center;
-      background-size: contain;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      background: #fff url('silhouette.png') no-repeat center top;
+      background-size: 80% auto;
+      background-position: center 40px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
       overflow: hidden;
     }
     .wish-container::before {
@@ -30,7 +32,7 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(255,255,255,0.7);
-      border-radius: 20px;
+      border-radius: 16px;
       z-index: 1;
     }
     .wish-container h1,
@@ -39,12 +41,13 @@
       z-index: 2;
     }
     .wish-container h1 {
-      font-size: 2rem; /* responsive units */
-      margin-bottom: 20px;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
     }
     .wish-container p {
-      font-size: 1.2rem;
-      line-height: 1.6;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-top: 120px; /* ensures text sits below silhouette */
       word-wrap: break-word;
     }
     canvas {
@@ -57,17 +60,19 @@
       z-index: 0;
     }
 
-    /* Responsive adjustments */
+    /* Mobile-specific tweaks */
     @media (max-width: 600px) {
       .wish-container {
-        padding: 20px 15px;
+        padding: 15px;
+        background-size: 100% auto;
+        background-position: center 20px;
       }
       .wish-container h1 {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
       }
       .wish-container p {
-        font-size: 1rem;
-        line-height: 1.4;
+        font-size: 0.95rem;
+        margin-top: 100px;
       }
     }
   </style>
@@ -153,7 +158,8 @@
     resizeCanvas();
 
     const confettiPieces = [];
-    for (let i = 0; i < 150; i++) {
+    const confettiCount = window.innerWidth < 600 ? 100 : 200; // fewer pieces on mobile
+    for (let i = 0; i < confettiCount; i++) {
       confettiPieces.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
