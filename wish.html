@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Friendship Wish</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ensures mobile scaling -->
+  <style>
+    body {
+      font-family: 'Dancing Script', cursive;
+      text-align: center;
+      margin: 0;
+      overflow-x: hidden;
+      background-attachment: fixed; /* keeps gradient stable */
+    }
+    .wish-container {
+      margin: 8% auto;
+      max-width: 90%; /* flexible width for mobile */
+      padding: 40px 20px;
+      border-radius: 20px;
+      position: relative;
+      z-index: 2;
+      color: #333;
+      background: #fff url('silhouette.png') no-repeat center center;
+      background-size: contain;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+    .wish-container::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255,255,255,0.7);
+      border-radius: 20px;
+      z-index: 1;
+    }
+    .wish-container h1,
+    .wish-container p {
+      position: relative;
+      z-index: 2;
+    }
+    .wish-container h1 {
+      font-size: 2rem; /* responsive units */
+      margin-bottom: 20px;
+    }
+    .wish-container p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      word-wrap: break-word;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .wish-container {
+        padding: 20px 15px;
+      }
+      .wish-container h1 {
+        font-size: 1.6rem;
+      }
+      .wish-container p {
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="wish-container">
+    <h1 id="title"></h1>
+    <p id="wishMessage"></p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get("name") || "Friend";
+
+    const themes = [
+      "linear-gradient(135deg, #1a1a1a, #333333)",
+      "linear-gradient(135deg, #2c3e50, #4ca1af)",
+      "linear-gradient(135deg, #000428, #004e92)",
+      "linear-gradient(135deg, #3c1053, #ad5389)",
+      "linear-gradient(135deg, #232526, #414345)",
+      "linear-gradient(135deg, #141e30, #243b55)"
+    ];
+    document.body.style.background = themes[Math.floor(Math.random() * themes.length)];
+
+    const wishes = [
+      `Hey <b>${name}</b>,<br><br>
+      You are the heartbeat in my laughter, the calm in my storms, 
+      and the sparkle in my everyday moments. 
+      Our friendship is not just a bond, it’s a story written in trust, 
+      painted in joy, and sealed with love.`,
+      `My dear <b>${name}</b>,<br><br>
+      With you, silence feels like music and distance feels like nothing. 
+      You are the friend who turns ordinary days into celebrations 
+      and heavy burdens into feathers.`,
+      `Beloved <b>${name}</b>,<br><br>
+      You are the chapter of my life that I read again and again, 
+      finding comfort in every word and joy in every line. 
+      Our friendship is my safe haven, my endless adventure, 
+      and my most cherished gift.`,
+      `To my treasured friend <b>${name}</b>,<br><br>
+      You are the light that colors my world, 
+      the anchor that steadies my soul, 
+      and the laughter that heals my heart.`,
+      `Dearest <b>${name}</b>,<br><br>
+      You are the sunrise that brightens my mornings 
+      and the gentle moonlight that calms my nights. 
+      Our friendship is the rhythm that keeps my heart dancing.`,
+      `Sweet <b>${name}</b>,<br><br>
+      You are the ink that writes joy into my days 
+      and the brush that paints hope into my tomorrows. 
+      With you, life feels like a masterpiece.`,
+      `Dear <b>${name}</b>,<br><br>
+      You are the smile that lingers in my memories 
+      and the voice that comforts me in silence. 
+      Our friendship is a melody that never fades.`,
+      `My friend <b>${name}</b>,<br><br>
+      You are the bridge that carries me over troubled waters 
+      and the wings that lift me when I fall. 
+      With you, I feel invincible.`,
+      `Beloved <b>${name}</b>,<br><br>
+      You are the spark that lights my soul 
+      and the gentle rain that nourishes my spirit. 
+      Our friendship is the season that never ends.`,
+      `To my cherished <b>${name}</b>,<br><br>
+      You are the poem I never stop reciting, 
+      the story I never tire of telling, 
+      and the gift I never stop cherishing.`
+    ];
+
+    const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+    document.getElementById("title").innerHTML = "🌸 Happy Friendship Day 🌸";
+    document.getElementById("wishMessage").innerHTML = randomWish;
+
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    const confettiPieces = [];
+    for (let i = 0; i < 150; i++) {
+      confettiPieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 100 + 50,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+        tilt: Math.random() * 10 - 10
+      });
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confettiPieces.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+      updateConfetti();
+    }
+
+    function updateConfetti() {
+      confettiPieces.forEach(p => {
+        p.y += Math.cos(p.d) + 1 + p.r / 2;
+        p.x += Math.sin(p.d);
+        if (p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    setInterval(drawConfetti, 20);
+  </script>
+</body>
+</html>
